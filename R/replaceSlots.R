@@ -11,7 +11,6 @@
 unsafe_replaceSlots <- function(object, ..., .slotList = list()) {
   valid_argnames <- slotNames(object)
   args <- extraArgsAsList(valid_argnames, ...)
-  firstTime <- TRUE
   listUpdate <- function(object, l) {
     for (nm in names(l)) {
       ## Too risky! identical() is not reliable enough e.g. with objects
@@ -20,14 +19,7 @@ unsafe_replaceSlots <- function(object, ..., .slotList = list()) {
       ## to be fixed first.
       ##if (identical(slot(object, nm), l[[nm]]))
       ##  next
-      if (firstTime) {
-        ## Triggers a copy.
-        slot(object, nm, check=FALSE) <- l[[nm]]
-        firstTime <<- FALSE
-      } else {
-        ## In-place modification (i.e. no copy).
-        `slot<-`(object, nm, check=FALSE, l[[nm]])
-      }
+      slot(object, nm, check=FALSE) <- l[[nm]]
     }
     object
   }
